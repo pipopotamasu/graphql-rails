@@ -25,6 +25,11 @@ client.query({
       post(id: 1) {
         id
         title
+        comments {
+          id,
+          content,
+          post
+        }
       }
     }
   `,
