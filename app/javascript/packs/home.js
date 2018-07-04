@@ -1,4 +1,5 @@
-import ApolloClient from 'apollo-boost';
+import ApolloClient from 'apollo-client';
+import { ApolloLink } from 'apollo-link';
 import { createHttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import gql from 'graphql-tag';
@@ -8,14 +9,29 @@ const csrfToken = document.querySelector('meta[name=csrf-token]').getAttribute('
 
 const httpLink = createHttpLink({
   uri: '/graphql',
-  credentials: 'same-origin',
-  headers: {
-    'X-CSRF-Token': csrfToken
-  }
 });
 
+const middlewareLink = new ApolloLink((operation, forward) => {
+  operation.setContext({
+    headers: {
+      'X-CSRF-Token': csrfToken
+    }
+  });
+  return forward(operation)
+})
+
+// const authLink = setContext((_, { headers }) => {
+//   // return the headers to the context so httpLink can read them
+//   return {
+//     headers: {
+//       ...headers,
+//       'X-CSRF-Token': csrfToken
+//     }
+//   }
+// });
+
 const client = new ApolloClient({
-  link: httpLink,
+  link: middlewareLink.concat(httpLink),
   cache: new InMemoryCache()
 });
 
@@ -28,7 +44,6 @@ client.query({
         comments {
           id,
           content,
-          post
         }
       }
     }
