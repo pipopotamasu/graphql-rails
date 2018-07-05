@@ -9,6 +9,7 @@ const csrfToken = document.querySelector('meta[name=csrf-token]').getAttribute('
 
 const httpLink = createHttpLink({
   uri: '/graphql',
+  credentials: 'same-origin'
 });
 
 const middlewareLink = new ApolloLink((operation, forward) => {
@@ -41,10 +42,6 @@ client.query({
       post(id: 1) {
         id
         title
-        comments {
-          id,
-          content,
-        }
       }
     }
   `,

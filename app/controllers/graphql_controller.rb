@@ -1,11 +1,5 @@
 class GraphqlController < ApplicationController
-  # delete later
-  # skip_before_action :verify_authenticity_token
-
   def execute
-    p request.headers['X-CSRF-Token']
-    p request.headers['Accept']
-
     variables = ensure_hash(params[:variables])
     query = params[:query]
     operation_name = params[:operationName]
