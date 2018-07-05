@@ -1,7 +1,7 @@
 class Types::QueryType < Types::BaseObject
   # Add root-level fields here.
   # First describe the field signature:
-  field :post, PostType, null: true do
+  field :post, Types::PostType, null: true do
     description "Find a post by ID"
     argument :id, ID, required: true
   end
