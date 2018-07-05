@@ -30,8 +30,12 @@ client.query({
   query: gql`
     {
       post(id: 1) {
-        id
-        title
+        id,
+        title,
+        comments {
+          id,
+          content
+        }
       }
     }
   `,
