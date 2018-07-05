@@ -21,16 +21,6 @@ const middlewareLink = new ApolloLink((operation, forward) => {
   return forward(operation)
 })
 
-// const authLink = setContext((_, { headers }) => {
-//   // return the headers to the context so httpLink can read them
-//   return {
-//     headers: {
-//       ...headers,
-//       'X-CSRF-Token': csrfToken
-//     }
-//   }
-// });
-
 const client = new ApolloClient({
   link: middlewareLink.concat(httpLink),
   cache: new InMemoryCache()
