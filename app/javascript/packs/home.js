@@ -26,17 +26,53 @@ const client = new ApolloClient({
   cache: new InMemoryCache()
 });
 
-client.query({
-  query: gql`
-    {
-      post(id: 1) {
-        id,
-        title,
-        comments {
-          id,
-          content
-        }
-      }
+const fetchQuery = gql`
+query {
+  post(id: 1) {
+    id,
+    title,
+    comments {
+      id,
+      content,
+      postId
     }
-  `,
+  }
+}
+`;
+
+const createPostQuery = gql`
+mutation {
+  createPostMutation(input: {title: "良い感じ！"}) {
+    post {
+      id,
+      title
+    }
+  }
+}
+`;
+
+const createCommentQuery = gql`
+mutation {
+  createCommentMutation(input: {content: "foo", postId: 4}) {
+    comment {
+      id,
+      content,
+      postId
+    }
+  }
+}
+`;
+
+
+
+// client.query({
+//   query: fetchQuery,
+// }).then(data => console.log(data)).catch(error => console.error(error));
+
+// client.mutate({
+//   mutation: createPostQuery,
+// }).then(data => console.log(data)).catch(error => console.error(error));
+
+client.mutate({
+  mutation: createCommentQuery,
 }).then(data => console.log(data)).catch(error => console.error(error));
