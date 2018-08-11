@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe GraphqlRailsSchema do
+RSpec.describe GraphqlRailsSchema, type: :request do
   # You can override `context` or `variables` in
   # more specific scopes
   let(:context) { {} }
@@ -24,23 +24,26 @@ RSpec.describe GraphqlRailsSchema do
   # provide a query string for `result`
   let(:query_string) { "{ post(id: #{post.id}) { id, title, comments { id, postId, content } } }" }
 
-  context "without comments" do
+  context "without comment" do
     it 'fetch correct data' do
-      expect(result['data']['post']['id']).to eq post.id.to_s
-      expect(result['data']['post']['title']).to eq post.title
-      expect(result['data']['post']['comments']).to eq []
+      result_post = result['data']['post']
+      expect(result_post['id']).to eq post.id.to_s
+      expect(result_post['title']).to eq post.title
+      expect(result_post['comments']).to eq []
     end
   end
 
-  context "with comments" do
+  context "with comment" do
     let!(:comment) { create(:comment, post: post) }
 
     it 'fetch correct data' do
-      expect(result['data']['post']['id']).to eq post.id.to_s
-      expect(result['data']['post']['title']).to eq post.title
-      expect(result['data']['post']['comments'][0]['id']).to eq comment.id.to_s
-      expect(result['data']['post']['comments'][0]['postId']).to eq post.id.to_s
-      expect(result['data']['post']['comments'][0]['content']).to eq comment.content
+      result_post = result['data']['post']
+      result_comment = result['data']['post']['comments'][0]
+      expect(result_post['id']).to eq post.id.to_s
+      expect(result_post['title']).to eq post.title
+      expect(result_comment['id']).to eq comment.id.to_s
+      expect(result_comment['postId']).to eq post.id.to_s
+      expect(result_comment['content']).to eq comment.content
     end
   end
 end
